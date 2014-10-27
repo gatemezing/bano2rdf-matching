@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE LIMES SYSTEM "limes.dtd">
+<LIMES>
+	<PREFIX>
+		<NAMESPACE>http://data.ign.fr/def/geofla#</NAMESPACE>
+		<LABEL>geofla</LABEL>
+	</PREFIX>
+	<PREFIX>
+		<NAMESPACE>http://data.ign.fr/id/geofla/</NAMESPACE>
+		<LABEL>geoign</LABEL>
+	</PREFIX>
+	<PREFIX>
+		<NAMESPACE>http://geovocab.org/geometry#</NAMESPACE>
+		<LABEL>geom</LABEL>
+	</PREFIX>
+	<PREFIX>
+     <NAMESPACE>http://www.w3.org/ns/locn#</NAMESPACE>
+     <LABEL>locn</LABEL>
+    </PREFIX>
+	<PREFIX>
+		<NAMESPACE>http://www.opengis.net/ont/geosparql#</NAMESPACE>
+		<LABEL>geos</LABEL>
+	</PREFIX>
+	<PREFIX>
+		<NAMESPACE>http://linkedgeodata.org/ontology/</NAMESPACE>
+		<LABEL>lgdo</LABEL>
+	</PREFIX>
+	<PREFIX>
+      <NAMESPACE>http://www.geonames.org/ontology#</NAMESPACE>
+      <LABEL>gn</LABEL>
+    </PREFIX>
+	<SOURCE>
+		<ID>bano2RDF</ID>
+		<ENDPOINT>http://eventmedia.eurecom.fr/sparql</ENDPOINT>
+		<VAR>?x</VAR>
+		<PAGESIZE>5000</PAGESIZE>
+		<RESTRICTION>?x a locn:Address</RESTRICTION>
+		<RESTRICTION>?x locn:postalCode ?code</RESTRICTION>
+		<RESTRICTION>FILTER(regex(str(?code), '690'))</RESTRICTION>
+		<PROPERTY>locn:geometry/geos:asWKT RENAME polygon</PROPERTY> 
+		<TYPE>SPARQL</TYPE>
+	</SOURCE>
+	<TARGET>
+		<ID>linkedgeodata</ID>
+		<ENDPOINT>http://linkedgeodata.org/sparql</ENDPOINT>
+		<VAR>?y</VAR>
+		<PAGESIZE>5000</PAGESIZE>
+		<RESTRICTION>?y a lgdo:Building</RESTRICTION>
+		<PROPERTY>geom:geometry/geos:asWKT RENAME polygon</PROPERTY>
+		<TYPE>SPARQL</TYPE>
+	</TARGET>
+	
+	<METRIC>hausdorff(x.polygon, y.polygon)</METRIC>
+	<ACCEPTANCE>
+		<THRESHOLD>0.97</THRESHOLD>
+		<FILE>bano690xx-lgdBuilding_verynear.nt</FILE>
+		<RELATION>lgdo:near</RELATION>
+	</ACCEPTANCE>
+	<REVIEW>
+		<THRESHOLD>0.95</THRESHOLD>
+		<FILE>bano690xx-lgdBuilding_place_near.nt</FILE>
+		<RELATION>lgdo:near</RELATION>
+	</REVIEW>
+	<EXECUTION>Simple</EXECUTION>
+	<OUTPUT>TAB</OUTPUT>
+</LIMES>
